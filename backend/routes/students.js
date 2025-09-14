@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import User from '../models/User.js';
+import Student from '../models/Student.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const User = require('../models/User');
-const Student = require('../models/Student');
-const { auth } = require('../middleware/auth');
 
 // Admin: Get all students
 router.get('/', auth, async (req, res) => {
@@ -46,13 +47,11 @@ router.put('/:id', auth, async (req, res) => {
     const student = await Student.findById(req.params.id).populate('user');
     if (!student) return res.status(404).json({ message: 'Student not found' });
 
-    // Update user details
     if (name) student.user.name = name;
     if (email) student.user.email = email;
     if (password) student.user.password = await bcrypt.hash(password, 10);
     await student.user.save();
 
-    // Update student details
     if (course) student.course = course;
     await student.save();
 
@@ -115,4 +114,4 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

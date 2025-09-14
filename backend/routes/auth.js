@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import Student from '../models/Student.js';
+import { auth } from '../middleware/auth.js';
+
 const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const Student = require('../models/Student');
-const { auth } = require('../middleware/auth');
 
 // Signup
 router.post('/signup', async (req, res) => {
@@ -19,7 +20,7 @@ router.post('/signup', async (req, res) => {
     await user.save();
 
     if (role === 'student') {
-      const student = new Student({ user: user._id, course }); // course from input field
+      const student = new Student({ user: user._id, course });
       await student.save();
     }
 
@@ -63,4 +64,4 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -8,4 +8,5 @@ const UserSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: true }, // auto-verified
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', UserSchema);
+const User = mongoose.model('User', UserSchema);
+export default User;

@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { auth } from '../middleware/auth.js';
+import Course from '../models/Course.js';
+
 const router = express.Router();
-const { auth } = require('../middleware/auth');
-const Course = require('../models/Course');
 
 // Get all courses
 router.get('/', auth, async (req, res) => {
@@ -13,4 +14,4 @@ router.get('/', auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
