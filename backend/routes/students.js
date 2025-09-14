@@ -1,3 +1,4 @@
+// backend/routes/students.js
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
@@ -22,7 +23,7 @@ router.post('/', auth, async (req, res) => {
   const { name, email, password, course } = req.body;
 
   try {
-    let existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'Email already exists' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -107,7 +108,11 @@ router.get('/me', auth, async (req, res) => {
     const student = await Student.findOne({ user: req.user.id }).populate('user');
     if (!student) return res.status(404).json({ message: 'Student not found' });
 
-    res.json({ user: student.user, course: student.course, enrollmentDate: student.enrollmentDate });
+    res.json({
+      user: student.user,
+      course: student.course,
+      enrollmentDate: student.enrollmentDate
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to fetch profile' });

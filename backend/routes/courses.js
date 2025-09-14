@@ -4,7 +4,6 @@ import Course from '../models/Course.js';
 
 const router = express.Router();
 
-// Get all courses
 router.get('/', auth, async (req, res) => {
   try {
     const courses = await Course.find();

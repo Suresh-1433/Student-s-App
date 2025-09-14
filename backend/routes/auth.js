@@ -10,7 +10,6 @@ const router = express.Router();
 // Signup
 router.post('/signup', async (req, res) => {
   const { name, email, password, role, course } = req.body;
-
   try {
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: 'User already exists' });
@@ -24,13 +23,8 @@ router.post('/signup', async (req, res) => {
       await student.save();
     }
 
-    const token = jwt.sign(
-      { user: { id: user._id, role: user.role } },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ user: { id: user._id, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
@@ -40,7 +34,6 @@ router.post('/signup', async (req, res) => {
 // Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid Credentials' });
@@ -49,13 +42,8 @@ router.post('/login', async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: 'Invalid Credentials' });
 
-    const token = jwt.sign(
-      { user: { id: user._id, role: user.role } },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' }
-    );
+    const token = jwt.sign({ user: { id: user._id, role: user.role } }, process.env.JWT_SECRET, { expiresIn: '1h' });
     res.json({ token });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });
